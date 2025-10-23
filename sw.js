@@ -9,25 +9,34 @@ function dist(a, b) {
 }
 
 let target = null;
+let checkInterval = null; // so we can stop it later
+
 self.addEventListener('message', e => {
   if (e.data.type === 'SET_TARGET') {
     target = e.data.target;
-    setInterval(async () => {
+    if (checkInterval) clearInterval(checkInterval);
+    checkInterval = setInterval(async () => {
       if (!target) return;
       try {
         const pos = await new Promise((res, rej) =>
           navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true }));
         const d = dist({ lat: pos.coords.latitude, lng: pos.coords.longitude }, target);
-        if (d <= 100) { // 100 m pre-alert
+        if (d <= 100) {
+          // 1. native notification
           self.registration.showNotification('Delhi Metro Princess ✨', {
             body: `Arriving at ${target.name}  (${Math.round(d)} m away)`,
             icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚇</text></svg>',
             vibrate: [200, 100, 200],
             tag: 'metro-alert'
           });
-          const phone = (await self.clients.matchAll())
-            .map(c => new URL(c.url).searchParams.get('phone'))
-            .find(p => p) || localStorage.getItem('herPhone');
+
+          // 2. tell the page to show the cute card
+          self.clients.matchAll().then(clients =>
+            clients.forEach(c => c.postMessage({ type: 'SHOW_CARD', name: target.name }))
+          );
+
+          // 3. WhatsApp auto-send
+          const phone = localStorage.getItem('herPhone');
           if (phone) {
             self.clients.openWindow(
               `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(`🚇✨ Arriving at ${target.name} now!`)}`,
@@ -36,10 +45,21 @@ self.addEventListener('message', e => {
               setTimeout(() => client?.postMessage({ type: 'AUTO_SEND' }), 6000);
             });
           }
-          target = null; // only once
+
+          // stop checking once inside 100 m
+          clearInterval(checkInterval);
+          checkInterval = null;
+          target = null;
         }
       } catch (_) {}
-    }, 10_000);
+    }, 2000); // 2-second heartbeat
+  }
+
+  if (e.data.type === 'STOP_TRACKING') {
+    clearInterval(checkInterval);
+    checkInterval = null;
+    target = null;
   }
 });
+
 
