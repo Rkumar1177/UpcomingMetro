@@ -18,7 +18,7 @@ self.addEventListener('message', e => {
         const pos = await new Promise((res, rej) =>
           navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true }));
         const d = dist({ lat: pos.coords.latitude, lng: pos.coords.longitude }, target);
-        if (d <= 500) { // 500 m pre-alert
+        if (d <= 100) { // 100 m pre-alert
           self.registration.showNotification('Delhi Metro Princess ✨', {
             body: `Arriving at ${target.name}  (${Math.round(d)} m away)`,
             icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚇</text></svg>',
@@ -42,3 +42,4 @@ self.addEventListener('message', e => {
     }, 10_000);
   }
 });
+
