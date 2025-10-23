@@ -39,17 +39,6 @@ self.addEventListener('message', e => {
           // 2. page card
           clients.forEach(c => c.postMessage({ type: 'SHOW_CARD', name: target.name }));
 
-          // 3. WhatsApp
-          const phone = localStorage.getItem('herPhone');
-          if (phone) {
-            self.clients.openWindow(
-              `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(`🚇✨ Arriving at ${target.name} now!`)}`,
-              { type: 'window', width: 10, height: 10, top: 10000, left: 10000 }
-            ).then(client => {
-              setTimeout(() => client?.postMessage({ type: 'AUTO_SEND' }), 6000);
-            });
-          }
-
           clearInterval(checkInterval);
           checkInterval = null;
           target = null;
@@ -66,3 +55,4 @@ self.addEventListener('message', e => {
     target = null;
   }
 });
+
