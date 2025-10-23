@@ -27,7 +27,7 @@ self.addEventListener('message', e => {
         const clients = await self.clients.matchAll();
         clients.forEach(c => c.postMessage({ type: 'DISTANCE', dist: d }));
 
-        if (d <= 1) {
+        if (d <= 100) {
           // 1. notify
           self.registration.showNotification('Delhi Metro Princess ✨', {
             body: `Arriving at ${target.name}  (${Math.round(d)} m away)`,
@@ -55,4 +55,5 @@ self.addEventListener('message', e => {
     target = null;
   }
 });
+
 
