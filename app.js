@@ -97,3 +97,23 @@ document.getElementById('goBtn').onclick = () => {
     {enableHighAccuracy:true}
   );
 };
+const saveBtn = document.getElementById('savePhoneBtn');
+const savedTag = document.getElementById('savedTag');
+const phoneIn = document.getElementById('phoneIn');
+
+// load once
+if(localStorage.getItem('herPhone')){
+  phoneIn.style.display='none';
+  saveBtn.style.display='none';
+  savedTag.style.display='block';
+}
+
+saveBtn.onclick = ()=>{
+  const n = phoneIn.value.trim();
+  if(!/^91[6-9]\d{9}$/.test(n)) return alert('Use format 91XXXXXXXXXX');
+  localStorage.setItem('herPhone',n);
+  phoneIn.style.display='none';
+  saveBtn.style.display='none';
+  savedTag.style.display='block';
+};
+
