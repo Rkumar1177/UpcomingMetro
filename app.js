@@ -1,5 +1,4 @@
 // correct order
-let swReg;
 navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
   .then(reg => {
     swReg = reg;                       // keep for later use
@@ -221,6 +220,7 @@ document.getElementById('testBtn').onclick = () => {
   }
   log('TEST alert fired');
 };
+
 
 
 
