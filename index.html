@@ -8,189 +8,194 @@
   <meta name="theme-color" content="#ffe6f2"/>
   <link rel="manifest" href="manifest.json"/>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚇</text></svg>">
+<style>
+  /* ---------- cute variables ---------- */
+  :root{
+    --pink: #ffe5f1;
+    --lav: #e8dfff;
+    --white: #ffffff;
+    --accent: #ff6bb2;
+    --text: #5a4a6a;
+    --font: 'Quicksand', sans-serif;
+  }
 
-  <!-- Google font -->
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  /* ---------- google font ---------- */
+  @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
 
-  <style>
-    :root{
-      --pink: #ffe5f1;
-      --lav: #e8dfff;
-      --white: #ffffff;
-      --accent: #ff6bb2;
-      --text: #5a4a6a;
-      --font: 'Quicksand', sans-serif;
-    }
+  /* ---------- soft animated bg ---------- */
+  body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:var(--font);
+    background:linear-gradient(-45deg, var(--pink), var(--lav), #fff0f9, #f3e7ff);
+    background-size:400% 400%;
+    animation:gradientShift 12s ease infinite;
+    color:var(--text);
+    overflow:hidden;
+  }
+  @keyframes gradientShift{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+  }
 
-    body{
-      margin:0;
-      height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-family:var(--font);
-      background:linear-gradient(-45deg, var(--pink), var(--lav), #fff0f9, #f3e7ff);
-      background-size:400% 400%;
-      animation: gradientShift 12s ease infinite;
-      color:var(--text);
-      overflow:hidden;
-    }
-    @keyframes gradientShift{
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-    }
+  /* ---------- floating sparkles ---------- */
+  .sparkle{
+    position:absolute;
+    width:4px;
+    height:4px;
+    background:var(--accent);
+    border-radius:50%;
+    box-shadow:0 0 10px 2px var(--accent);
+    animation:float 6s infinite ease-in-out;
+  }
+  @keyframes float{
+    0%,100%{transform:translateY(0) scale(1);opacity:0}
+    50%{transform:translateY(-100vh) scale(1.2);opacity:1}
+  }
 
-    /* ---------- falling golden glitter ---------- */
-    #glitterShower{position:fixed; inset:0; pointer-events:none; overflow:hidden}
-    .sprinkle{
-      position:absolute;
-      top:-20px;
-      width:5px;
-      height:12px;
-      background:#ffd32a;
-      border-radius:50% 50% 0 0;
-      box-shadow:0 0 8px #ffd32a, 0 0 16px #fffa65;
-      animation: fall 2.5s linear infinite, twinkle .2s infinite alternate;
-    }
-    @keyframes fall{
-      to{transform:translateY(110vh) rotate(360deg)}
-    }
-    @keyframes twinkle{
-      from{opacity:1} to{opacity:.6}
-    }
-    .sprinkle::after{
-      content:'';
-      position:absolute;
-      left:50%; top:100%;
-      transform:translateX(-50%);
-      width:2px; height:20px;
-      background:linear-gradient(to bottom, #ffd32a, transparent);
-      border-radius:50%;
-    }
+  /* ---------- glass card ---------- */
+  .card{
+    position:relative;
+    background:rgba(255,255,255,.35);
+    backdrop-filter:blur(12px);
+    border-radius:28px;
+    padding:2.2rem 2.8rem;
+    box-shadow:0 8px 32px rgba(0,0,0,.1),
+               inset 0 0 0 1px rgba(255,255,255,.6);
+    text-align:center;
+    max-width:360px;
+    width:90%;
+    animation:fadeIn .8s ease-out;
+  }
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+  }
 
-    /* ---------- glass card ---------- */
-    .card{
-      position:relative;
-      background:rgba(255,255,255,.35);
-      backdrop-filter:blur(12px);
-      border-radius:28px;
-      padding:2.2rem 2.8rem;
-      box-shadow:0 8px 32px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.6);
-      text-align:center;
-      max-width:360px;
-      width:90%;
-      animation:fadeIn .8s ease-out;
-    }
-    @keyframes fadeIn{
-      from{opacity:0; transform:translateY(20px)}
-      to{opacity:1; transform:translateY(0)}
-    }
+  h1{
+    font-size:1.8rem;
+    margin:0 0 .3rem;
+    letter-spacing:.5px;
+  }
+  p{
+    margin:0 0 1.5rem;
+    font-size:.95rem;
+  }
 
-    h1{font-size:1.8rem; margin:0 0 .3rem; letter-spacing:.5px}
-    p{margin:0 0 1.5rem; font-size:.95rem}
+  /* ---------- cute inputs & buttons ---------- */
+  input,select,button{
+    width:100%;
+    padding:.85rem 1rem;
+    border:none;
+    border-radius:16px;
+    font-size:1rem;
+    font-family:var(--font);
+    outline:none;
+    transition:all .3s ease;
+  }
+  input,select{
+    background:var(--white);
+    color:var(--text);
+    box-shadow:inset 2px 2px 4px rgba(0,0,0,.05),
+               inset -2px -2px 4px rgba(255,255,255,.8);
+  }
+  button{
+    margin-top:.6rem;
+    background:var(--accent);
+    color:var(--white);
+    font-weight:600;
+    letter-spacing:.5px;
+    box-shadow:0 4px 15px rgba(255,107,178,.35);
+    cursor:pointer;
+  }
+  button:active{
+    transform:scale(.96);
+    box-shadow:0 2px 8px rgba(255,107,178,.35);
+  }
 
-    input,select,button{
-      width:100%;
-      padding:.85rem 1rem;
-      border:none;
-      border-radius:16px;
-      font-size:1rem;
-      font-family:var(--font);
-      outline:none;
-      transition:all .3s ease;
-    }
-    input,select{
-      background:var(--white);
-      color:var(--text);
-      box-shadow:inset 2px 2px 4px rgba(0,0,0,.05), inset -2px -2px 4px rgba(255,255,255,.8);
-    }
-    button{
-      margin-top:.6rem;
-      background:var(--accent);
-      color:var(--white);
-      font-weight:600;
-      letter-spacing:.5px;
-      box-shadow:0 4px 15px rgba(255,107,178,.35);
-      cursor:pointer;
-    }
-    button:active{transform:scale(.96); box-shadow:0 2px 8px rgba(255,107,178,.35)}
-
-    #log{
-      margin-top:1.2rem;
-      font-size:.8rem;
-      height:100px;
-      overflow:auto;
-      text-align:left;
-      padding:.8rem;
-      background:rgba(255,255,255,.3);
-      border-radius:12px;
-    }
-  </style>
+  #log{
+    margin-top:1.2rem;
+    font-size:.8rem;
+    height:100px;
+    overflow:auto;
+    text-align:left;
+    padding:.8rem;
+    background:rgba(255,255,255,.3);
+    border-radius:12px;
+  }
+</style>
 </head>
-
 <body>
-  <!-- golden glitter shower -->
-  <div id="glitterShower"></div>
+<div class="sparkle" style="left:5%;  animation-delay:0s"></div>
+<div class="sparkle" style="left:15%; animation-delay:1s"></div>
+<div class="sparkle" style="left:30%; animation-delay:3s"></div>
+<div class="sparkle" style="left:45%; animation-delay:2s"></div>
+<div class="sparkle" style="left:60%; animation-delay:4s"></div>
+<div class="sparkle" style="left:75%; animation-delay:1.5s"></div>
+<div class="sparkle" style="left:90%; animation-delay:2.5s"></div>
 
-  <!-- glass card -->
-  <div class="card">
-    <h1>🚇💖 Delhi Metro Princess</h1>
-    <p>Choose your stop & let the sparkles guide you ✨</p>
+<!-- ---------- cute card ---------- -->
+<div class="card">
+  <h1>🚇💖 Delhi Metro 🚇💖Princess</h1>
+  <p>Choose your stop & let the sparkles guide you ✨</p>
 
-    <input id="phoneIn" type="tel" placeholder="91XXXXXXXXXX">
-    <button id="savePhoneBtn">Save my number</button>
-    <div id="savedTag" style="display:none;font-size:.8rem;color:var(--accent)">✅ Saved — you won’t see this again</div>
+  <input id="phoneIn" type="tel" placeholder="91XXXXXXXXXX">
+  <button id="savePhoneBtn">Save my number</button>
+  <div id="savedTag" style="display:none;font-size:.8rem;color:var(--accent)">✅ Saved — you won’t see this again</div>
 
-    <select id="stationSel"><option value="">Pick a station…</option></select>
+  <select id="stationSel">
+    <option value="">Pick a station…</option>
+  </select>
 
-    <button id="goBtn">Start live tracking</button>
-    <button id="notiBtn">Allow notifications</button>
+  <button id="goBtn">Start live tracking</button>
+  <button id="notiBtn">Allow notifications</button>
 
-    <pre id="log"></pre>
-  </div>
+  <pre id="log"></pre>
+</div>
 
-  <script src="app.js"></script>
-
-  <!-- glitter shower generator -->
+<script src="app.js"></script>
   <script>
-    const shower = document.getElementById('glitterShower');
-    for (let i = 0; i < 60; i++) {
-      const s = document.createElement('div');
-      s.className = 'sprinkle';
-      s.style.left = Math.random() * 100 + '%';
-      s.style.animationDelay = Math.random() * 2.5 + 's';
-      s.style.animationDuration = (2 + Math.random() * 1) + 's';
-      shower.appendChild(s);
-    }
-  </script>
+  // ---- touch-sparkle effect ----
+  const sparkleSVG = `
+  <svg class="touchSparkle" width="40" height="40" viewBox="0 0 40 40" style="position:fixed;z-index:9999;pointer-events:none;left:0;top:0;transform:translate(-20px,-20px) scale(.3);opacity:0">
+    <path d="M20 0l5 15h15l-12 9 5 15-13-10-13 10 5-15-12-9h15z" fill="#ff6bb2"/>
+  </svg>`;
 
-  <!-- touch glitter burst -->
-  <script>
-    document.addEventListener('touchstart', e => {
-      [...e.changedTouches].forEach(t => {
-        const x = t.pageX, y = t.pageY;
-        for (let i = 0; i < 6; i++) {
-          const d = document.createElement('div');
-          Object.assign(d.style, {
-            position: 'fixed', zIndex: 9999, pointerEvents: 'none',
-            left: x + 'px', top: y + 'px', width: '4px', height: '4px',
-            background: '#fff', borderRadius: '50%',
-            boxShadow: '0 0 8px #fff, 0 0 12px #ff6bb2',
-            transition: 'transform .35s ease-out, opacity .35s ease-out',
-            transform: 'translate(-50%,-50%) scale(1)'
-          });
-          document.body.appendChild(d);
-          const a = Math.random() * Math.PI * 2;
-          const r = 20 + Math.random() * 30;
-          requestAnimationFrame(() => {
-            d.style.transform = `translate(calc(-50% + ${Math.cos(a) * r}px), calc(-50% + ${Math.sin(a) * r}px)) scale(0)`;
-            d.style.opacity = 0;
-          });
-          setTimeout(() => d.remove(), 400);
-        }
+document.addEventListener('touchstart', e => {
+  [...e.changedTouches].forEach(t => {
+    const x = t.pageX, y = t.pageY;
+    for (let i = 0; i < 6; i++) {
+      const d = document.createElement('div');
+      Object.assign(d.style, {
+        position: 'fixed', zIndex: 9999, pointerEvents: 'none',
+        left: x + 'px', top: y + 'px',
+        width: '4px', height: '4px',
+        background: '#F4FF1F', borderRadius: '50%',
+        boxShadow: '0 0 8px #F4FF1F, 0 0 12px #ff6bb2',
+        transition: 'transform .35s ease-out, opacity .35s ease-out',
+        transform: 'translate(-50%,-50%) scale(1)'
       });
-    });
-  </script>
+      document.body.appendChild(d);
+      // random direction & distance
+      const a = Math.random() * Math.PI * 2;
+      const r = 20 + Math.random() * 30;
+      requestAnimationFrame(() => {
+        d.style.transform = `translate(calc(-50% + ${Math.cos(a) * r}px), calc(-50% + ${Math.sin(a) * r}px)) scale(0)`;
+        d.style.opacity = 0;
+      });
+      setTimeout(() => d.remove(), 400);
+    }
+  });
+});
+</script>
 </body>
 </html>
+
+
+
+
+
