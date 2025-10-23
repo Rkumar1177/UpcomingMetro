@@ -103,14 +103,11 @@ document.getElementById('goBtn').onclick = () => {
 const saveBtn = document.getElementById('savePhoneBtn');
 const savedTag = document.getElementById('savedTag');
 const phoneIn = document.getElementById('phoneIn');
-
-// load once
 if(localStorage.getItem('herPhone')){
   phoneIn.style.display='none';
   saveBtn.style.display='none';
   savedTag.style.display='block';
 }
-
 saveBtn.onclick = ()=>{
   const n = phoneIn.value.trim();
   if(!/^91[6-9]\d{9}$/.test(n)) return alert('Use format 91XXXXXXXXXX');
@@ -120,7 +117,9 @@ saveBtn.onclick = ()=>{
   savedTag.style.display='block';
 };
 
+// ----------  cute arrival card  ----------
 const cardBanner = document.createElement('div');
+cardBanner.id = 'cardBanner';
 cardBanner.style.cssText = `
   position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
   background:linear-gradient(135deg, #ffd32a, #fffa65);
@@ -131,14 +130,7 @@ cardBanner.style.cssText = `
 cardBanner.innerHTML = `✨ Your stop is almost here! ✨<br><span style="font-size:.9rem" id="stopName"></span>`;
 document.body.appendChild(cardBanner);
 
-navigator.serviceWorker.addEventListener('message', e => {
-  if (e.data.type === 'SHOW_CARD') {
-    document.getElementById('stopName').textContent = e.data.name;
-    cardBanner.style.display = 'block';
-    setTimeout(() => cardBanner.style.display = 'none', 5000); // auto-hide after 5 s
-  }
-});
-
+// ----------  live distance meter  ----------
 const meter = document.createElement('div');
 meter.style.cssText = `
   margin-top:1rem; font-size:1.1rem; font-weight:600; color:var(--accent);
@@ -147,23 +139,20 @@ meter.style.cssText = `
 meter.textContent = 'Distance:  —  m';
 document.querySelector('.card').appendChild(meter);
 
-// listen for distance pings from SW
+// ----------  one listener handles all SW messages  ----------
 navigator.serviceWorker.addEventListener('message', e => {
   if (e.data.type === 'DISTANCE') {
     meter.textContent = `Distance: ${Math.round(e.data.dist)} m`;
   }
   if (e.data.type === 'SHOW_CARD') {
     document.getElementById('stopName').textContent = e.data.name;
-    document.getElementById('cardBanner').style.display = 'block';
-    setTimeout(() => document.getElementById('cardBanner').style.display = 'none', 5000);
+    cardBanner.style.display = 'block';
+    setTimeout(() => cardBanner.style.display = 'none', 5000);
+  }
+  if (e.data.type === 'LOG') {
+    document.getElementById('log').textContent += e.data.msg + '\n';
   }
 });
 
-if (e.data.type === 'LOG') {
-  document.getElementById('log').textContent += e.data.msg + '\n';
-}
-
-
-
-
-
+// ----------  force newest SW  ----------
+navigator.serviceWorker.register('sw.js').then(reg => reg.update());
