@@ -159,6 +159,11 @@ navigator.serviceWorker.addEventListener('message', e => {
   }
 });
 
+if (e.data.type === 'LOG') {
+  document.getElementById('log').textContent += e.data.msg + '\n';
+}
+
+
 
 
 
