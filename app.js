@@ -119,4 +119,24 @@ saveBtn.onclick = ()=>{
   savedTag.style.display='block';
 };
 
+const cardBanner = document.createElement('div');
+cardBanner.style.cssText = `
+  position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  background:linear-gradient(135deg, #ffd32a, #fffa65);
+  color:#5a3b00; font-weight:600; font-size:1.2rem;
+  padding:1.2rem 2rem; border-radius:24px; box-shadow:0 8px 32px rgba(0,0,0,.2);
+  text-align:center; z-index:10000; display:none; animation:pop .4s ease;
+`;
+cardBanner.innerHTML = `✨ Your stop is almost here! ✨<br><span style="font-size:.9rem" id="stopName"></span>`;
+document.body.appendChild(cardBanner);
+
+navigator.serviceWorker.addEventListener('message', e => {
+  if (e.data.type === 'SHOW_CARD') {
+    document.getElementById('stopName').textContent = e.data.name;
+    cardBanner.style.display = 'block';
+    setTimeout(() => cardBanner.style.display = 'none', 5000); // auto-hide after 5 s
+  }
+});
+
+
 
