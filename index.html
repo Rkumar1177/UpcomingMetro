@@ -165,27 +165,36 @@
     <path d="M20 0l5 15h15l-12 9 5 15-13-10-13 10 5-15-12-9h15z" fill="#ff6bb2"/>
   </svg>`;
 
-  document.addEventListener('touchstart', e => {
-    [...e.changedTouches].forEach(t => {
-      const sp = document.createElement('div');
-      sp.innerHTML = sparkleSVG;
-      const svg = sp.querySelector('svg');
-      svg.style.left = t.pageX + 'px';
-      svg.style.top  = t.pageY + 'px';
-      document.body.appendChild(svg);
-      // animate
-      requestAnimationFrame(() => {
-        svg.style.transition = 'transform .4s ease-out, opacity .4s ease-out';
-        svg.style.transform  = 'translate(-20px,-20px) scale(1)';
-        svg.style.opacity    = '1';
+document.addEventListener('touchstart', e => {
+  [...e.changedTouches].forEach(t => {
+    const x = t.pageX, y = t.pageY;
+    for (let i = 0; i < 6; i++) {
+      const d = document.createElement('div');
+      Object.assign(d.style, {
+        position: 'fixed', zIndex: 9999, pointerEvents: 'none',
+        left: x + 'px', top: y + 'px',
+        width: '4px', height: '4px',
+        background: '#fff', borderRadius: '50%',
+        boxShadow: '0 0 8px #fff, 0 0 12px #ff6bb2',
+        transition: 'transform .35s ease-out, opacity .35s ease-out',
+        transform: 'translate(-50%,-50%) scale(1)'
       });
-      // remove after fade
-      setTimeout(() => svg.remove(), 500);
-    });
+      document.body.appendChild(d);
+      // random direction & distance
+      const a = Math.random() * Math.PI * 2;
+      const r = 20 + Math.random() * 30;
+      requestAnimationFrame(() => {
+        d.style.transform = `translate(calc(-50% + ${Math.cos(a) * r}px), calc(-50% + ${Math.sin(a) * r}px)) scale(0)`;
+        d.style.opacity = 0;
+      });
+      setTimeout(() => d.remove(), 400);
+    }
   });
+});
 </script>
 </body>
 </html>
+
 
 
 
