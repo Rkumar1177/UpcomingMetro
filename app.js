@@ -1,4 +1,6 @@
 // correct order
+// sw
+let swReg;
 navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
   .then(reg => {
     swReg = reg;                       // keep for later use
@@ -96,10 +98,6 @@ document.getElementById('notiBtn').onclick = async () => {
   const r = await Notification.requestPermission();
   log('Notification: ' + r);
 };
-
-// sw
-let swReg;
-navigator.serviceWorker.register('sw.js').then(r=>swReg=r);
 
 // start
 document.getElementById('goBtn').onclick = () => {
@@ -220,6 +218,7 @@ document.getElementById('testBtn').onclick = () => {
   }
   log('TEST alert fired');
 };
+console.log('APP loaded at', new Date().toLocaleTimeString());
 
 
 
