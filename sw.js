@@ -12,6 +12,7 @@ let target = null;
 let checkInterval = null;
 
 self.addEventListener('message', e => {
+  console.log('SW heard:', e.data);
   if (e.data.type === 'SET_TARGET') {
     target = e.data.target;
     if (checkInterval) clearInterval(checkInterval);
@@ -55,5 +56,6 @@ self.addEventListener('message', e => {
     target = null;
   }
 });
+
 
 
