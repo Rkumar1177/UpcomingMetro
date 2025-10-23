@@ -1,6 +1,18 @@
-navigator.serviceWorker.register('sw.js',{updateViaCache:'none'})
-  .then(reg => reg.update())
-  .then(() => console.log('SW updated:', reg.installing || reg.waiting || reg.active));
+// correct order
+let swReg;
+navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+  .then(reg => {
+    swReg = reg;                       // keep for later use
+    return reg.update();
+  })
+  .then(() => {
+    console.log('SW updated:', swReg.installing || swReg.waiting || swReg.active);
+  });
+
+// one global listener for all SW → page messages
+navigator.serviceWorker.addEventListener('message', e => {
+  console.log('PAGE heard:', e.data);
+});
 
 // Delhi Metro – Dabri More → Millennium City Centre (Gurgaon)  [^22^][^23^][^30^]
 const ROUTE = [
@@ -63,10 +75,10 @@ const ROUTE = [
   {name:"Moulsari Avenue",            lat:28.3800,lng:76.9850},
   {name:"Phase 3",                    lat:28.3650,lng:76.9700},
   {name:"Millennium City Centre",     lat:28.3500,lng:76.9550},
-  {name:"Sutta Break",                lat:13.148188,lng:77.619812},
+  {name:"Sutta Break",                lat:13.1481,lng:77.6198},
   {name:"Home",                       lat:13.1462,lng:77.6202},
-  {name:"Office",                     lat:12.94008,lng:77.51270},
-  {name:"Home2",                      lat:13.1463161,lng:77.6202549}
+  {name:"Home2",                      lat:13.1463,lng:77.6202},
+  {name:"Office",                     lat:12.9400,lng:77.5127}
 ];
 
 const log = txt => document.getElementById('log').textContent += txt + '\n';
@@ -209,6 +221,7 @@ document.getElementById('testBtn').onclick = () => {
   }
   log('TEST alert fired');
 };
+
 
 
 
