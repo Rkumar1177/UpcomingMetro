@@ -58,7 +58,9 @@ const ROUTE = [
   {name:"Cyber City",                 lat:28.3950,lng:77.0000},
   {name:"Moulsari Avenue",            lat:28.3800,lng:76.9850},
   {name:"Phase 3",                    lat:28.3650,lng:76.9700},
-  {name:"Millennium City Centre",     lat:28.3500,lng:76.9550}
+  {name:"Millennium City Centre",     lat:28.3500,lng:76.9550},
+  {name:"Sutta Break",                lat:13.148188,lng:77.619812},
+  {name:"Home",                       lat:13.146361545537234,lng:77.6202038543683}
 ];
 
 const log = txt => document.getElementById('log').textContent += txt + '\n';
@@ -116,4 +118,5 @@ saveBtn.onclick = ()=>{
   saveBtn.style.display='none';
   savedTag.style.display='block';
 };
+
 
