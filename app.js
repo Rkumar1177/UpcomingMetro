@@ -189,6 +189,26 @@ document.getElementById('stopBtn').onclick = () => {
   log('Tracking stopped');
 };
 
+// ---------- fake trigger for testing ----------
+document.getElementById('testBtn').onclick = () => {
+  // pretend we’re 0 m away from the selected station
+  if (!sel.value) return log('Pick a station first');
+  const fakeTarget = JSON.parse(sel.value);
+  // send the exact same message the SW would send
+  navigator.serviceWorker.controller?.postMessage({
+    type: 'SHOW_CARD',
+    name: fakeTarget.name
+  });
+  // also fire the native notification manually
+  if (Notification.permission === 'granted') {
+    new Notification('Delhi Metro Princess ✨ (TEST)', {
+      body: `Arriving at ${fakeTarget.name}  (0 m away)`,
+      icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚇</text></svg>',
+      vibrate: [200, 100, 200]
+    });
+  }
+  log('TEST alert fired');
+};
 
 
 
