@@ -65,6 +65,7 @@ const ROUTE = [
   {name:"Millennium City Centre",     lat:28.3500,lng:76.9550},
   {name:"Sutta Break",                lat:13.148188,lng:77.619812},
   {name:"Home",                       lat:13.1462,lng:77.6202},
+  {name:"Office",                     lat:12.94008,lng:77.51270},
   {name:"Home2",                      lat:13.1463161,lng:77.6202549}
 ];
 
@@ -187,6 +188,7 @@ document.getElementById('stopBtn').onclick = () => {
   cardBanner.style.display = 'none';          // hide card if visible
   log('Tracking stopped');
 };
+
 
 
 
