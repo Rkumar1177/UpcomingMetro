@@ -1,45 +1,31 @@
-// Background geo watcher + notifier
-let watchId = null;
-const TARGET = { lat: 40.7580, lng: -73.9855, radius: 50 }; // Times Sq 50 m – change to yours
-
-function distance(a, b) {
-  const R = 6371e3;
-  const toRad = x => x * Math.PI / 180;
+const R = 6371e3;
+function dist(a,b){
+  const toRad = x => x*Math.PI/180;
   const φ1 = toRad(a.lat), φ2 = toRad(b.lat);
-  const Δφ = toRad(b.lat - a.lat);
-  const Δλ = toRad(b.lng - a.lng);
-  const x = Math.sin(Δφ/2)*Math.sin(Δφ/2) +
-            Math.cos(φ1)*Math.cos(φ2) *
-            Math.sin(Δλ/2)*Math.sin(Δλ/2);
-  const c = 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
-  return R * c;
+  const Δφ = toRad(b.lat - a.lat), Δλ = toRad(b.lng - a.lng);
+  const x = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
 }
-
+let target = null;
 self.addEventListener('message', e => {
-  if (e.data.type === 'START_WATCH') {
-    if (watchId) return;
-    watchId = setInterval(async () => {
+  if (e.data.type === 'SET_TARGET') {
+    target = e.data.target;
+    setInterval(async () => {
+      if (!target) return;
       try {
-        const pos = await new Promise((res, rej) =>
-          navigator.geolocation.getCurrentPosition(res, rej, {enableHighAccuracy:true})
-        );
-        const user = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        const d = distance(user, TARGET);
-        if (d <= TARGET.radius) {
-          self.registration.showNotification('Geo-Alert', {
-            body: `You are arriving at the target zone! (${Math.round(d)} m)`,
-            icon: '/favicon.ico',
-            vibrate: [200, 100, 200],
-            tag: 'arrival'
+        const pos = await new Promise((res,rej) =>
+          navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true}));
+        const d = dist({lat:pos.coords.latitude,lng:pos.coords.longitude}, target);
+        if (d <= 500) { // 500 m pre-alert
+          self.registration.showNotification('Delhi Metro Princess ✨', {
+            body: `Arriving at ${target.name}  (${Math.round(d)} m away)`,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚇</text></svg>',
+            vibrate: [200,100,200],
+            tag: 'metro-alert'
           });
-          clearInterval(watchId);
-          watchId = null;
+          target = null;
         }
-      } catch (e) {}
-    }, 10_000); // 10 s heartbeat
-  }
-  if (e.data.type === 'STOP_WATCH') {
-    clearInterval(watchId);
-    watchId = null;
+      } catch (_) {}
+    }, 10_000);
   }
 });
