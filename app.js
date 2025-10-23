@@ -139,6 +139,26 @@ navigator.serviceWorker.addEventListener('message', e => {
   }
 });
 
+const meter = document.createElement('div');
+meter.style.cssText = `
+  margin-top:1rem; font-size:1.1rem; font-weight:600; color:var(--accent);
+  background:rgba(255,255,255,.4); border-radius:12px; padding:.6rem;
+`;
+meter.textContent = 'Distance:  —  m';
+document.querySelector('.card').appendChild(meter);
+
+// listen for distance pings from SW
+navigator.serviceWorker.addEventListener('message', e => {
+  if (e.data.type === 'DISTANCE') {
+    meter.textContent = `Distance: ${Math.round(e.data.dist)} m`;
+  }
+  if (e.data.type === 'SHOW_CARD') {
+    document.getElementById('stopName').textContent = e.data.name;
+    document.getElementById('cardBanner').style.display = 'block';
+    setTimeout(() => document.getElementById('cardBanner').style.display = 'none', 5000);
+  }
+});
+
 
 
 
