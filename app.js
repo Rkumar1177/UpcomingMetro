@@ -98,11 +98,29 @@ document.getElementById('goBtn').onclick = () => {
     swReg.active.postMessage({type:'SET_TARGET',target});
   }
   // live coords
-  navigator.geolocation.watchPosition(
-    p => log(`Live  ${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`),
-    e => log('Geo error: ' + e.message),
-    {enableHighAccuracy:true}
-  );
+let liveLat, liveLng;
+navigator.geolocation.watchPosition(
+  p => {
+    liveLat = p.coords.latitude;
+    liveLng = p.coords.longitude;
+    const msg = `Live  ${liveLat.toFixed(6)}, ${liveLng.toFixed(6)}`;
+    log(msg);
+
+    // add a tiny “Copy” button next to the log
+    if (!window.copyBtn) {
+      window.copyBtn = document.createElement('button');
+      copyBtn.textContent = '📋 Copy current';
+      copyBtn.style.cssText = 'margin-left:.5rem; padding:.2rem .4rem; font-size:.7rem;';
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(`${liveLat.toFixed(6)},${liveLng.toFixed(6)}`);
+        log('Copied to clipboard!');
+      };
+      document.getElementById('log').after(copyBtn);
+    }
+  },
+  e => log('Geo error: ' + e.message),
+  { enableHighAccuracy: true }
+);
 };
 const saveBtn = document.getElementById('savePhoneBtn');
 const savedTag = document.getElementById('savedTag');
@@ -169,3 +187,4 @@ document.getElementById('stopBtn').onclick = () => {
   cardBanner.style.display = 'none';          // hide card if visible
   log('Tracking stopped');
 };
+
