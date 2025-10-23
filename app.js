@@ -1,3 +1,7 @@
+navigator.serviceWorker.register('sw.js',{updateViaCache:'none'})
+  .then(reg => reg.update())
+  .then(() => console.log('SW updated:', reg.installing || reg.waiting || reg.active));
+
 // Delhi Metro – Dabri More → Millennium City Centre (Gurgaon)  [^22^][^23^][^30^]
 const ROUTE = [
   {name:"Dabri Mor - Janakpuri South",lat:28.6300,lng:77.0900},
@@ -141,6 +145,7 @@ document.querySelector('.card').appendChild(meter);
 
 // ----------  one listener handles all SW messages  ----------
 navigator.serviceWorker.addEventListener('message', e => {
+  console.log('SW msg:', e.data);  
   if (e.data.type === 'DISTANCE') {
     meter.textContent = `Distance: ${Math.round(e.data.dist)} m`;
   }
@@ -156,3 +161,11 @@ navigator.serviceWorker.addEventListener('message', e => {
 
 // ----------  force newest SW  ----------
 navigator.serviceWorker.register('sw.js').then(reg => reg.update());
+document.getElementById('stopBtn').onclick = () => {
+  if (swReg && swReg.active) {
+    swReg.active.postMessage({type:'STOP_TRACKING'});
+  }
+  meter.textContent = 'Distance: — m';        // reset display
+  cardBanner.style.display = 'none';          // hide card if visible
+  log('Tracking stopped');
+};
