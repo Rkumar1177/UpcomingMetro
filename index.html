@@ -158,8 +158,35 @@
 </div>
 
 <script src="app.js"></script>
+  <script>
+  // ---- touch-sparkle effect ----
+  const sparkleSVG = `
+  <svg class="touchSparkle" width="40" height="40" viewBox="0 0 40 40" style="position:fixed;z-index:9999;pointer-events:none;left:0;top:0;transform:translate(-20px,-20px) scale(.3);opacity:0">
+    <path d="M20 0l5 15h15l-12 9 5 15-13-10-13 10 5-15-12-9h15z" fill="#ff6bb2"/>
+  </svg>`;
+
+  document.addEventListener('touchstart', e => {
+    [...e.changedTouches].forEach(t => {
+      const sp = document.createElement('div');
+      sp.innerHTML = sparkleSVG;
+      const svg = sp.querySelector('svg');
+      svg.style.left = t.pageX + 'px';
+      svg.style.top  = t.pageY + 'px';
+      document.body.appendChild(svg);
+      // animate
+      requestAnimationFrame(() => {
+        svg.style.transition = 'transform .4s ease-out, opacity .4s ease-out';
+        svg.style.transform  = 'translate(-20px,-20px) scale(1)';
+        svg.style.opacity    = '1';
+      });
+      // remove after fade
+      setTimeout(() => svg.remove(), 500);
+    });
+  });
+</script>
 </body>
 </html>
+
 
 
 
