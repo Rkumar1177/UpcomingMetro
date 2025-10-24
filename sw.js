@@ -1,8 +1,3 @@
-console.log('SW loaded at', new Date().toLocaleTimeString());
-self.addEventListener('message', e => {
-  console.log('SW heard:', e.data);
-});
-
 // =========  sw.js  (complete, valid)  ==========
 const R = 6371e3;
 function dist(a, b) {
@@ -61,6 +56,7 @@ self.addEventListener('message', e => {
     target = null;
   }
 });
+
 
 
 
