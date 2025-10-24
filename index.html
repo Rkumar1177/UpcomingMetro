@@ -8,61 +8,151 @@
   <meta name="theme-color" content="#ffe6f2"/>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚇</text></svg>'>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(135deg, #ffe5f1, #e8dfff);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .card {
-      background: rgba(255,255,255,0.4);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 2rem;
-      text-align: center;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-    select, input, button {
-      width: 100%;
-      margin: 0.4rem 0;
-      padding: 0.8rem;
-      border-radius: 10px;
-      border: none;
-      font-family: inherit;
-      font-size: 1rem;
-    }
-    button {
-      background: #ff6bb2;
-      color: white;
-      cursor: pointer;
-    }
-    #log {
-      text-align: left;
-      font-size: 0.85rem;
-      background: rgba(255,255,255,0.6);
-      padding: 1rem;
-      border-radius: 10px;
-      height: 100px;
-      overflow-y: auto;
-    }
-  </style>
+  /* ---------- soft girly palette ---------- */
+:root{
+  --pink: #ffe5f1;
+  --lav: #e8dfff;
+  --white: #ffffff;
+  --accent: #ff6bb2;
+  --text: #5a4a6a;
+  --font: 'Quicksand', sans-serif;
+}
+
+/* ---------- Google font ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
+
+/* ---------- animated pastel bg ---------- */
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font);
+  background:linear-gradient(-45deg, var(--pink), var(--lav), #fff0f9, #f3e7ff);
+  background-size:400% 400%;
+  animation:gradientShift 12s ease infinite;
+  color:var(--text);
+  overflow:hidden;
+}
+@keyframes gradientShift{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* ---------- falling golden glitter ---------- */
+#glitterShower{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.sprinkle{
+  position:absolute;
+  top:-20px;
+  width:5px;
+  height:12px;
+  background:#ffd32a;
+  border-radius:50% 50% 0 0;
+  box-shadow:0 0 8px #ffd32a, 0 0 16px #fffa65;
+  animation:fall 2.5s linear infinite, twinkle .2s infinite alternate;
+}
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg)}
+}
+@keyframes twinkle{
+  from{opacity:1} to{opacity:.6}
+}
+.sprinkle::after{
+  content:'';
+  position:absolute;
+  left:50%; top:100%;
+  transform:translateX(-50%);
+  width:2px; height:20px;
+  background:linear-gradient(to bottom, #ffd32a, transparent);
+  border-radius:50%;
+}
+
+/* ---------- glass card ---------- */
+.card{
+  position:relative;
+  background:rgba(255,255,255,.35);
+  backdrop-filter:blur(12px);
+  border-radius:28px;
+  padding:2.2rem 2.8rem;
+  box-shadow:0 8px 32px rgba(0,0,0,.1),
+             inset 0 0 0 1px rgba(255,255,255,.6);
+  text-align:center;
+  max-width:360px;
+  width:90%;
+  animation:fadeIn .8s ease-out;
+}
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px)}
+  to{opacity:1; transform:translateY(0)}
+}
+
+h1{font-size:1.8rem; margin:0 0 .3rem; letter-spacing:.5px}
+p{margin:0 0 1.5rem; font-size:.95rem}
+
+/* ---------- cute inputs & buttons ---------- */
+input,select,button{
+  width:100%;
+  padding:.85rem 1rem;
+  border:none;
+  border-radius:16px;
+  font-size:1rem;
+  font-family:var(--font);
+  outline:none;
+  transition:all .3s ease;
+}
+input,select{
+  background:var(--white);
+  color:var(--text);
+  box-shadow:inset 2px 2px 4px rgba(0,0,0,.05),
+             inset -2px -2px 4px rgba(255,255,255,.8);
+}
+button{
+  margin-top:.6rem;
+  background:var(--accent);
+  color:var(--white);
+  font-weight:600;
+  letter-spacing:.5px;
+  box-shadow:0 4px 15px rgba(255,107,178,.35);
+  cursor:pointer;
+}
+button:active{transform:scale(.96); box-shadow:0 2px 8px rgba(255,107,178,.35)}
+
+#log{
+  margin-top:1.2rem;
+  font-size:.8rem;
+  height:100px;
+  overflow:auto;
+  text-align:left;
+  padding:.8rem;
+  background:rgba(255,255,255,.3);
+  border-radius:12px;
+}
+@keyframes pop{
+  from{opacity:0; transform:translate(-50%,-50%) scale(.7)}
+  to{opacity:1; transform:translate(-50%,-50%) scale(1)}
+}
+</style>
 </head>
 <body>
+<div id="glitterShower"></div>
   <div class="card">
-    <h1>🚇 Delhi Metro Princess</h1>
-    <p>Pick your target stop and start tracking!</p>
+    <h1>🚇 Delhi Metro 🚇</h1>
+    <p>Booboo, choose your stop & let the sparkles guide you ✨</p>
 
     <input id="phoneIn" type="tel" placeholder="91XXXXXXXXXX"/>
     <button id="savePhoneBtn">Save Number</button>
+	<div id="savedTag" style="display:none;font-size:.8rem;color:var(--accent)">✅ Saved — you won’t see this again</div>
 
     <select id="stationSel">
       <option value="">Choose station...</option>
-      <option value="28.6139,77.2090,Connaught Place">Connaught Place</option>
-      <option value="28.5562,77.1000,IGI Airport">IGI Airport</option>
-      <option value="28.7041,77.1025,New Delhi">New Delhi</option>
+      <option value="28.6300,77.0900,Dabri Mor - Janakpuri South">Dabri Mor - Janakpuri South</option>
+      <option value="28.4650,77.1650,Hauz Khas">Hauz Khas</option>
+      <option value="28.3500,76.9550,Millennium City Centre">Millennium City Centre</option>
+	    <option value="13.1462,77.6202,Home">Home</option>
+	    <option value="13.1463,77.6202,Home2">Home2</option>
+	    <option value="12.9400,77.5127,Office">Office</option>
     </select>
 
     <button id="goBtn">Start Tracking</button>
@@ -74,5 +164,16 @@
   </div>
 
   <script src="app.js"></script>
+  <script>
+    const shower = document.getElementById('glitterShower');
+    for (let i = 0; i < 60; i++) {
+      const s = document.createElement('div');
+      s.className = 'sprinkle';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.animationDelay = Math.random() * 2.5 + 's';
+      s.style.animationDuration = (2 + Math.random() * 1) + 's';
+      shower.appendChild(s);
+    }
+  </script>
 </body>
 </html>
