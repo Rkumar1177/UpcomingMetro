@@ -43,16 +43,6 @@ self.addEventListener('message', e => {
       }
     }, 2000);
   }
-  if (e.data.type === 'STOP_TRACKING') {
-    clearInterval(checkInterval);
-    checkInterval = null;
-    target = null;
-        } else {
-          clients.forEach(c => c.postMessage({ type: 'LOG', msg: `Still ${Math.round(d)} m away` }));
-        }
-      } catch (_) {}
-    }, 2000);
-  }
 
   if (e.data.type === 'STOP_TRACKING') {
     clearInterval(checkInterval);
@@ -60,6 +50,7 @@ self.addEventListener('message', e => {
     target = null;
   }
 });
+
 
 
 
