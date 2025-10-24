@@ -8,41 +8,45 @@ function dist(a, b) {
   return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
 }
 
+let currentPos = null;
 let target = null;
 let checkInterval = null;
 
 self.addEventListener('message', e => {
-  console.log('SW heard:', e.data);
+  if (e.data.type === 'UPDATE_POS') currentPos = e.data.coords;
   if (e.data.type === 'SET_TARGET') {
     target = e.data.target;
     if (checkInterval) clearInterval(checkInterval);
-
-    checkInterval = setInterval(async () => {
-      if (!target) return;
-      try {
-        const pos = await new Promise((res, rej) =>
-          navigator.geolocation.getCurrentPosition(res, rej, { enableHighAccuracy: true }));
-        const d = dist({ lat: pos.coords.latitude, lng: pos.coords.longitude }, target);
-
-        // live distance to page
-        const clients = await self.clients.matchAll();
-        clients.forEach(c => c.postMessage({ type: 'DISTANCE', dist: d }));
-
-        if (d <= 100) {
-          // 1. notify
-          self.registration.showNotification('Delhi Metro Princess ✨', {
-            body: `Arriving at ${target.name}  (${Math.round(d)} m away)`,
-            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚇</text></svg>',
-            vibrate: [200, 100, 200],
-            tag: 'metro-alert'
-          });
-
-          // 2. page card
-          clients.forEach(c => c.postMessage({ type: 'SHOW_CARD', name: target.name }));
-
-          clearInterval(checkInterval);
-          checkInterval = null;
-          target = null;
+    checkInterval = setInterval(() => {
+      if (!currentPos || !target) return;
+      const d = dist(currentPos, target);
+      self.clients.matchAll().then(clients =>
+        clients.forEach(c => c.postMessage({ type: 'DISTANCE', dist: d }))
+      );
+      if (d <= 100) {
+        self.registration.showNotification('Delhi Metro Princess ✨', {
+          body: `Arriving at ${target.name}  (${Math.round(d)} m away)`,
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚇</text></svg>',
+          vibrate: [200, 100, 200],
+          tag: 'metro-alert'
+        });
+        self.clients.matchAll().then(clients =>
+          clients.forEach(c => c.postMessage({ type: 'SHOW_CARD', name: target.name }))
+        );
+        clearInterval(checkInterval);
+        checkInterval = null;
+        target = null;
+      } else {
+        self.clients.matchAll().then(clients =>
+          clients.forEach(c => c.postMessage({ type: 'LOG', msg: `Still ${Math.round(d)} m away` }))
+        );
+      }
+    }, 2000);
+  }
+  if (e.data.type === 'STOP_TRACKING') {
+    clearInterval(checkInterval);
+    checkInterval = null;
+    target = null;
         } else {
           clients.forEach(c => c.postMessage({ type: 'LOG', msg: `Still ${Math.round(d)} m away` }));
         }
@@ -56,6 +60,7 @@ self.addEventListener('message', e => {
     target = null;
   }
 });
+
 
 
 
