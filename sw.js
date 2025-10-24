@@ -28,7 +28,7 @@ self.addEventListener('message', e => {
         clients.forEach(c => c.postMessage({ type: 'DISTANCE', dist: d }))
       );
 
-      if (d <= 100) {
+      if (d <= 5) {
         self.registration.showNotification('Delhi Metro Princess ✨', {
           body: `Arriving at ${target.name} (${Math.round(d)} m away)`,
           icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚇</text></svg>',
@@ -51,3 +51,4 @@ self.addEventListener('message', e => {
     target = null;
   }
 });
+
