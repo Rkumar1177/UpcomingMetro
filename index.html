@@ -39,7 +39,6 @@
       50%{background-position:100% 50%}
       100%{background-position:0% 50%}
     }
-
     /* ---------- floating sparkles ---------- */
     .sparkle{
       position:absolute;
@@ -54,7 +53,6 @@
       0%,100%{transform:translateY(0) scale(1);opacity:0}
       50%{transform:translateY(-100vh) scale(1.2);opacity:1}
     }
-
     /* ---------- glass card ---------- */
     .card{
       position:relative;
@@ -73,7 +71,6 @@
       from{opacity:0;transform:translateY(20px)}
       to{opacity:1;transform:translateY(0)}
     }
-
     h1{
       font-size:1.8rem;
       margin:0 0 .3rem;
@@ -83,7 +80,6 @@
       margin:0 0 1.5rem;
       font-size:.95rem;
     }
-
     /* ---------- cute inputs & buttons ---------- */
     input,select,button{
       width:100%;
@@ -132,7 +128,6 @@
   </style>
 </head>
 <body>
-
 <!-- ---------- floating sparkles ---------- -->
 <div class="sparkle" style="left:5%;  animation-delay:0s"></div>
 <div class="sparkle" style="left:15%; animation-delay:1s"></div>
@@ -141,87 +136,28 @@
 <div class="sparkle" style="left:60%; animation-delay:4s"></div>
 <div class="sparkle" style="left:75%; animation-delay:1.5s"></div>
 <div class="sparkle" style="left:90%; animation-delay:2.5s"></div>
-
 <!-- ---------- cute card ---------- -->
 <div class="card">
-  <h1>🚇💖 Delhi Metro 🚇💖</h1>
+  <h1>🚇💖 Delhi Metro 🚇💖Princess</h1>
   <p>Booboo, choose your stop & let the sparkles guide you ✨</p>
-
+  <input id="phoneIn" type="tel" placeholder="91XXXXXXXXXX"/>
+  <button id="savePhoneBtn">Save Number</button>
+  <div id="savedTag" style="display:none;font-size:.8rem;color:var(--accent)">✅ Saved — you won’t see this again</div>
   <select id="stationSel">
     <option value="">Choose station...</option>
     <option value="28.6300,77.0900,Dabri Mor - Janakpuri South">Dabri Mor - Janakpuri South</option>
-    <option value="28.6100,77.0650,Palam">Palam</option>
-    <option value="28.5940,77.0580,Sadar Bazaar Cantonment">Sadar Bazaar Cantonment</option>
-    <option value="28.5560,77.0850,IGI Airport T1">IGI Airport T1</option>
-    <option value="28.5400,77.0950,Shankar Vihar">Shankar Vihar</option>
-    <option value="28.5250,77.1050,Vasant Vihar">Vasant Vihar</option>
-    <option value="28.5100,77.1200,Munirka">Munirka</option>
-    <option value="28.4950,77.1350,RK Puram">RK Puram</option>
-    <option value="28.4800,77.1500,IIT Delhi">IIT Delhi</option>
     <option value="28.4650,77.1650,Hauz Khas">Hauz Khas</option>
-    <option value="28.4500,77.1800,Panchsheel Park">Panchsheel Park</option>
-    <option value="28.4350,77.1950,Chirag Delhi">Chirag Delhi</option>
-    <option value="28.4200,77.2100,Greater Kailash">Greater Kailash</option>
-    <option value="28.4050,77.2250,Nehru Enclave">Nehru Enclave</option>
-    <option value="28.3900,77.2400,Kalkaji Mandir">Kalkaji Mandir</option>
-    <option value="28.3750,77.2550,Okhla NSIC">Okhla NSIC</option>
-    <option value="28.3600,77.2700,Sukhdev Vihar">Sukhdev Vihar</option>
-    <option value="28.3450,77.2850,Jamia Millia Islamia">Jamia Millia Islamia</option>
-    <option value="28.3300,77.3000,Okhla Vihar">Okhla Vihar</option>
-    <option value="28.3150,77.3150,Jasola Vihar Shaheen Bagh">Jasola Vihar Shaheen Bagh</option>
-    <option value="28.3000,77.3300,Kalindi Kunj">Kalindi Kunj</option>
-    <option value="28.2850,77.3450,Okhla Bird Sanctuary">Okhla Bird Sanctuary</option>
-    <option value="28.2700,77.3600,Botanical Garden">Botanical Garden</option>
-    <option value="28.6150,77.2100,Central Secretariat">Central Secretariat</option>
-    <option value="28.6000,77.2250,Khan Market">Khan Market</option>
-    <option value="28.5850,77.2400,JLN Stadium">JLN Stadium</option>
-    <option value="28.5700,77.2550,Jangpura">Jangpura</option>
-    <option value="28.5550,77.2700,Lajpat Nagar">Lajpat Nagar</option>
-    <option value="28.5400,77.2850,Moolchand">Moolchand</option>
-    <option value="28.5250,77.3000,Kailash Colony">Kailash Colony</option>
-    <option value="28.5100,77.3150,Nehru Place">Nehru Place</option>
-    <option value="28.4950,77.3300,Kalkaji Mandir">Kalkaji Mandir</option>
-    <option value="28.4800,77.3450,Govindpuri">Govindpuri</option>
-    <option value="28.4650,77.3600,Harkesh Nagar Okhla">Harkesh Nagar Okhla</option>
-    <option value="28.4500,77.3750,Jasola Apollo">Jasola Apollo</option>
-    <option value="28.4350,77.3900,Sarita Vihar">Sarita Vihar</option>
-    <option value="28.4200,77.4050,Mohan Estate">Mohan Estate</option>
-    <option value="28.4050,77.4200,Tughlakabad Station">Tughlakabad Station</option>
-    <option value="28.3900,77.4350,Badarpur Border">Badarpur Border</option>
-    <option value="28.3750,77.4500,Sarai">Sarai</option>
-    <option value="28.3600,77.4650,NHPC Chowk">NHPC Chowk</option>
-    <option value="28.3450,77.4800,Mewla Maharajpur">Mewla Maharajpur</option>
-    <option value="28.3300,77.4950,Sector 28">Sector 28</option>
-    <option value="28.3150,77.5100,Badkhal Mor">Badkhal Mor</option>
-    <option value="28.3000,77.5250,Faridabad Old">Faridabad Old</option>
-    <option value="28.2850,77.5400,Bata Chowk">Bata Chowk</option>
-    <option value="28.2700,77.5550,Escorts Mujesar">Escorts Mujesar</option>
-    <option value="28.2550,77.5700,Sant Surdas - Sihi">Sant Surdas - Sihi</option>
-    <option value="28.2400,77.5850,Raja Nahar Singh">Raja Nahar Singh</option>
-    <option value="28.4700,77.0750,IFFCO Chowk">IFFCO Chowk</option>
-    <option value="28.4550,77.0600,MG Road">MG Road</option>
-    <option value="28.4400,77.0450,Sikandarpur">Sikandarpur</option>
-    <option value="28.4250,77.0300,Phase 2">Phase 2</option>
-    <option value="28.4100,77.0150,Belvedere Towers">Belvedere Towers</option>
-    <option value="28.3950,77.0000,Cyber City">Cyber City</option>
-    <option value="28.3800,76.9850,Moulsari Avenue">Moulsari Avenue</option>
-    <option value="28.3650,76.9700,Phase 3">Phase 3</option>
     <option value="28.3500,76.9550,Millennium City Centre">Millennium City Centre</option>
-    <option value="13.1481,77.6198,Sutta Break">Sutta Break</option>
     <option value="13.1462,77.6202,Home">Home</option>
     <option value="13.1463,77.6202,Home2">Home2</option>
     <option value="12.9400,77.5127,Office">Office</option>
   </select>
-
   <button id="goBtn">Start Tracking</button>
   <button id="stopBtn" style="background:#888;">Stop Tracking</button>
   <button id="notiBtn">Enable Notifications</button>
-
+  <button id="testBtn" style="background:#ff6bb2;">Test Alert</button>
   <pre id="log"></pre>
 </div>
-
 <script src="app.js"></script>
 </body>
 </html>
-
-
