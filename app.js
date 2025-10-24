@@ -110,21 +110,26 @@ document.getElementById('goBtn').onclick = () => {
   // live coords
 let liveLat, liveLng;
 navigator.geolocation.watchPosition(
-  p => {
-    liveLat = p.coords.latitude;
-    liveLng = p.coords.longitude;
+  pos => {
+    liveLat = pos.coords.latitude;
+    liveLng = pos.coords.longitude;
     const msg = `Live  ${liveLat.toFixed(6)}, ${liveLng.toFixed(6)}`;
     log(msg);
 
-    // add a tiny “Copy” button next to the log
+    // send to SW every 2 s
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'UPDATE_POS',
+        coords: { lat: liveLat, lng: liveLng }
+      });
+    }
+
+    // copy button (keep as-is)
     if (!window.copyBtn) {
       window.copyBtn = document.createElement('button');
       copyBtn.textContent = '📋 Copy current';
       copyBtn.style.cssText = 'margin-left:.5rem; padding:.2rem .4rem; font-size:.7rem;';
-      copyBtn.onclick = () => {
-        navigator.clipboard.writeText(`${liveLat.toFixed(6)},${liveLng.toFixed(6)}`);
-        log('Copied to clipboard!');
-      };
+      copyBtn.onclick = () => navigator.clipboard.writeText(`${liveLat.toFixed(6)},${liveLng.toFixed(6)}`);
       document.getElementById('log').after(copyBtn);
     }
   },
@@ -219,6 +224,7 @@ document.getElementById('testBtn').onclick = () => {
   log('TEST alert fired');
 };
 console.log('APP loaded at', new Date().toLocaleTimeString());
+
 
 
 
