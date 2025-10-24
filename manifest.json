@@ -1,7 +1,7 @@
 {
   "name": "Delhi Metro Princess",
   "short_name": "DM-Princess",
-  "start_url": "/",
+  "start_url": "/UpcomingMetro/",
   "display": "standalone",
   "background_color": "#ffe6f2",
   "theme_color": "#ffe6f2",
@@ -9,3 +9,4 @@
     { "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><circle cx='256' cy='256' r='200' fill='%23ff4d94'/><text x='50%' y='50%' text-anchor='middle' dy='.3em' font-size='240' fill='white'>🚇</text></svg>", "sizes": "512x512", "type": "image/svg+xml" }
   ]
 }
+
