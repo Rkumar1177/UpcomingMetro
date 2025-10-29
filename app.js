@@ -38,22 +38,58 @@ document.getElementById('notiBtn').onclick = async () => {
   log(`🔔 Notifications: ${perm}`);
 };
 
-// Start live tracking
-document.getElementById('goBtn').onclick = async () => {
+// Send message helper
+function sendToSW(msg) {
+  if (navigator.serviceWorker.controller)
+    navigator.serviceWorker.controller.postMessage(msg);
+  else log('⚠️ No SW controller yet');
+}
+
+// ----------------------------
+// 🔥 Smart Location Tracking
+// ----------------------------
+
+let heartbeat = null;
+let target = null;
+
+function startTracking() {
+  if (!navigator.geolocation) {
+    log('❌ Geolocation not supported');
+    return;
+  }
+
   const val = document.getElementById('stationSel').value;
-  if (!val) return alert('Pick a station!');
+  if (!val) return alert('Pick a station first!');
   const [lat, lng, name] = val.split(',');
-  const target = { lat: +lat, lng: +lng, name };
+  target = { lat: +lat, lng: +lng, name };
   log(`🎯 Tracking ${name}`);
   sendToSW({ type: 'SET_TARGET', target });
-  watchPosition();
-};
 
-// Stop tracking
-document.getElementById('stopBtn').onclick = () => {
+  // Replace watchPosition with periodic GPS polling
+  heartbeat = setInterval(() => {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      sendToSW({ type: 'UPDATE_POS', coords });
+      log(`📍 ${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}`);
+    }, err => log('⚠️ ' + err.message), { enableHighAccuracy: true });
+  }, 5000); // Every 5 seconds
+}
+
+function stopTracking() {
+  if (heartbeat) {
+    clearInterval(heartbeat);
+    heartbeat = null;
+  }
   sendToSW({ type: 'STOP_TRACKING' });
   log('🛑 Tracking stopped');
-};
+}
+
+// ----------------------------
+// 🧠 Button Wiring
+// ----------------------------
+
+document.getElementById('goBtn').onclick = startTracking;
+document.getElementById('stopBtn').onclick = stopTracking;
 
 document.getElementById('testBtn').onclick = () => {
   navigator.serviceWorker.ready.then(reg =>
@@ -65,19 +101,12 @@ document.getElementById('testBtn').onclick = () => {
   );
 };
 
-function sendToSW(msg) {
-  if (navigator.serviceWorker.controller)
-    navigator.serviceWorker.controller.postMessage(msg);
-  else log('⚠️ No SW controller yet');
-}
+// ----------------------------
+// 💓 SW Heartbeat (Keeps alive)
+// ----------------------------
 
-function watchPosition() {
-  if (!navigator.geolocation) {
-    log('❌ Geolocation not supported');
-    return;
+navigator.serviceWorker.addEventListener('message', e => {
+  if (e.data.type === 'PING') {
+    sendToSW({ type: 'PONG' });
   }
-  navigator.geolocation.watchPosition(pos => {
-    const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    sendToSW({ type: 'UPDATE_POS', coords });
-  }, err => log('⚠️ ' + err.message), { enableHighAccuracy: true });
-}
+});
