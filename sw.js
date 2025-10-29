@@ -3,7 +3,7 @@ function dist(a, b) {
   const toRad = x => x * Math.PI / 180;
   const φ1 = toRad(a.lat), φ2 = toRad(b.lat);
   const Δφ = toRad(b.lat - a.lat), Δλ = toRad(b.lng - a.lng);
-  const x = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+  const x = Math.sin(Δφ / 2) ** 2 + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
 }
 
@@ -32,7 +32,7 @@ self.addEventListener('message', e => {
         self.registration.showNotification('Delhi Metro Princess ✨', {
           body: `Arriving at ${target.name} (${Math.round(d)} m away)`,
           icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🚇</text></svg>',
-          vibrate: [200,100,200],
+          vibrate: [200, 100, 200],
           tag: 'metro-alert'
         });
         self.clients.matchAll().then(clients =>
@@ -52,3 +52,12 @@ self.addEventListener('message', e => {
   }
 });
 
+
+// 🩵 --- KEEP SERVICE WORKER ALIVE (Heartbeat ping) ---
+setInterval(() => {
+  self.clients.matchAll().then(clients => {
+    for (const c of clients) {
+      c.postMessage({ type: 'PING' });
+    }
+  });
+}, 15000);
