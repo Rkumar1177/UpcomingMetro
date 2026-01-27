@@ -1,0 +1,316 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "UWS Submission API",
+    "description": "API to submit UWS messages to be processed and send to NetLineLoad System.\n",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.copa.com",
+      "description": "Production"
+    },
+    {
+      "url": "https://api-uat.copa.com",
+      "description": "UAT"
+    }
+  ],
+  "tags": [
+    {
+      "name": "UWS",
+      "description": "UWS message submission"
+    }
+  ],
+  "paths": {
+    "/uws/messages/v1.0": {
+      "post": {
+        "tags": [
+          "UWS"
+        ],
+        "summary": "Submit a UWS message for a flight",
+        "description": "Accepts a UWS payload as a raw string inside a JSON request body, preserving line breaks. Returns a transactionId to track processing downstream.\n",
+        "operationId": "submitUwsMessage",
+        "parameters": [
+          {
+            "name": "X-Correlation-Id",
+            "in": "header",
+            "description": "Optional client-provided correlation identifier for end-to-end tracing. If not provided, the service will generate one.\n",
+            "required": false,
+            "schema": {
+              "maxLength": 128,
+              "type": "string"
+            },
+            "example": "extsys-20260121-000123"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UwsMessageRequest"
+              },
+              "examples": {
+                "example1": {
+                  "summary": "Sample UWS submission",
+                  "value": {
+                    "Airline": "CM",
+                    "FINALlightNumber": "351",
+                    "FlightDateUtc": "2026-01-21T00:00:00.000Z",
+                    "Departure": "PUJ",
+                    "Arrival": "PTY",
+                    "UwsContent": "UWS\nCM351/21.PUJ.FINAL\nBULK\n-PUJ004/PTY/50A/010/C.PCS1.PRI8.GEN.AWB/230-67055870\n-PUJ003/PTY/24A/001/C.PCS1.PRI8.GEN.AWB/230-67055866\n-PUJ002/PTY/153A/005/C.PCS5.PRI8.GEN.AWB/230-67055844\n-PUJ001/PTY/78A/002/C.PCS1.PRI8.GEN.AWB/230-67055811\n"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted for processing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UwsMessageAcceptedResponse"
+                },
+                "examples": {
+                  "accepted": {
+                    "value": {
+                      "TransactionId": "b7c1d2a0f2e94d6e9c17b7cfe2d5a9b3",
+                      "Status": "ACCEPTED",
+                      "ReceivedAtUtc": "2026-01-21T14:05:33.000Z",
+                      "Message": "UWS message accepted for processing."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request (validation error)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid": {
+                    "value": {
+                      "ErrorCode": "VALIDATION_ERROR",
+                      "Message": "The request contains invalid or missing fields. Please review the input parameters.",
+                      "TransactionId": "b7c1d2a0f2e94d6e9c17b7cfe2d5a9b3",
+                      "TimestampUtc": "2026-01-21T14:05:33.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid": {
+                    "value": {
+                      "ErrorCode": "UNAUTHORIZED",
+                      "Message": "Authentication is required or the provided credentials are invalid.",
+                      "TransactionId": "b7c1d2a0f2e94d6e9c17b7cfe2d5a9b3",
+                      "TimestampUtc": "2026-01-21T14:05:33.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid": {
+                    "value": {
+                      "ErrorCode": "FORBIDDEN",
+                      "Message": "You are not authorized to submit UWS messages for the specified airline.",
+                      "TransactionId": "b7c1d2a0f2e94d6e9c17b7cfe2d5a9b3",
+                      "TimestampUtc": "2026-01-21T14:05:33.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid": {
+                    "value": {
+                      "ErrorCode": "INTERNAL_ERROR",
+                      "Message": "An unexpected error occurred while processing the UWS message. Please contact support if the issue persists.",
+                      "TransactionId": "b7c1d2a0f2e94d6e9c17b7cfe2d5a9b3",
+                      "TimestampUtc": "2026-01-21T14:05:33.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UwsMessageRequest": {
+        "required": [
+          "Airline",
+          "Arrival",
+          "Departure",
+          "FlightDateUtc",
+          "FlightNumber",
+          "UwsContent"
+        ],
+        "type": "object",
+        "properties": {
+          "Airline": {
+            "maxLength": 3,
+            "minLength": 2,
+            "pattern": "^[A-Z0-9]{2,3}$",
+            "type": "string",
+            "description": "Airline code.",
+            "example": "CM"
+          },
+          "FlightNumber": {
+            "maxLength": 6,
+            "minLength": 1,
+            "pattern": "^[0-9]{1,6}$",
+            "type": "string",
+            "description": "Flight number (numeric part). Do not include airline code.",
+            "example": "351"
+          },
+          "FlightDateUtc": {
+            "type": "string",
+            "description": "Flight date in UTC in format YYYY-MM-dd.",
+            "format": "date",
+            "example": "2026-01-21T00:00:00.000Z"
+          },
+          "Departure": {
+            "maxLength": 3,
+            "minLength": 3,
+            "pattern": "^[A-Z]{3}$",
+            "type": "string",
+            "description": "Departure station (IATA code).",
+            "example": "PUJ"
+          },
+          "Arrival": {
+            "maxLength": 3,
+            "minLength": 3,
+            "pattern": "^[A-Z]{3}$",
+            "type": "string",
+            "description": "Arrival station (IATA code).",
+            "example": "PTY"
+          },
+          "UwsContent": {
+            "maxLength": 200000,
+            "minLength": 1,
+            "type": "string",
+            "description": "Raw UWS content as text. Line breaks must be preserved. In JSON, newlines are represented as '\\n'. Clients may send the content exactly as-is; JSON encoding will preserve line breaks.\n",
+            "example": "UWS\nCM351/21.PUJ.FINAL\nBULK\n-PUJ004/PTY/50A/010/C.PCS1.PRI8.GEN.AWB/230-67055870"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UwsMessageAcceptedResponse": {
+        "required": [
+          "ReceivedAtUtc",
+          "Status",
+          "TransactionId"
+        ],
+        "type": "object",
+        "properties": {
+          "TransactionId": {
+            "type": "string",
+            "description": "Correlation identifier for tracking and troubleshooting.",
+            "example": "b7c1d2a0f2e94d6e9c17b7cfe2d5a9b3"
+          },
+          "Status": {
+            "type": "string",
+            "description": "Request acceptance status.",
+            "example": "ACCEPTED",
+            "enum": [
+              "ACCEPTED"
+            ]
+          },
+          "ReceivedAtUtc": {
+            "type": "string",
+            "description": "UTC timestamp when the request was accepted.",
+            "format": "date-time",
+            "example": "2026-01-21T14:05:33.000Z"
+          },
+          "Message": {
+            "type": "string",
+            "description": "Human-readable status message.",
+            "example": "UWS message accepted for processing."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorResponse": {
+        "required": [
+          "ErrorCode",
+          "Message",
+          "TimestampUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string",
+            "description": "Machine-readable error code.",
+            "example": "VALIDATION_ERROR"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message.",
+            "example": "One or more fields are invalid."
+          },
+          "transactionId": {
+            "type": "string",
+            "description": "Correlation identifier (if available).",
+            "example": "b7c1d2a0f2e94d6e9c17b7cfe2d5a9b3"
+          },
+          "timestampUtc": {
+            "type": "string",
+            "description": "UTC timestamp when the error was produced.",
+            "format": "date-time",
+            "example": "2026-01-21T14:05:33.000Z"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
